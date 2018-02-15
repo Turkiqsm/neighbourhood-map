@@ -1,0 +1,27 @@
+
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+  }
+
+  .navy {
+    max-width: 35%;
+    margin-top: 20%;
+    position: fixed;
+    z-index: 10;
+  }
+
+  #map {
+    height: 100%;
+    max-width: 100;
+  }
+
+  .all {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
