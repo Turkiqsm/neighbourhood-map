@@ -257,7 +257,7 @@ inLocations.forEach(function(index) {
   }
   self.Locationslist().push(new Locations(index));
 });
-self.resLsit= ko.observableArray(self.Locationslist());
+self.returnList= ko.observableArray(self.Locationslist());
 this.currentLocation = ko.observable(this.Locationslist()[0]);
 
 
