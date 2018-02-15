@@ -100,7 +100,7 @@ var Locations = function(data) {
   });
 
 
-}//end of locations function
+};//end of locations function
 
 
 /*
@@ -266,19 +266,19 @@ this.restaurantsLsit = function() {
 
   self.returnList(self.resLsit());
 
-}
+};
 //ALLlsit push all the list in result list
 this.ALLlsit = function() {
 
   self.returnList(self.Locationslist());
 
-}
+};
 //pushed the coffee list in result list
 this.coffeeLsit = function() {
 
   self.returnList(self.cofLsit());
 
-}
+};
 //map handling
 
 //markers
@@ -313,7 +313,7 @@ self.markerAnimation = function(item){
   setTimeout(function(){ item.marker().setAnimation(null); }, 1550);
 
 
-}
+};
 
 
 
@@ -350,7 +350,7 @@ var showall = function() {
   });
   map.fitBounds(Bound);
 
-}
+};
 
 //showresturants markers
 var showresturants = function() {
@@ -369,7 +369,7 @@ var showresturants = function() {
   });
 
 
-}
+};
 
 //showcoffee markers
 var showcoffee = function() {
@@ -388,7 +388,7 @@ var showcoffee = function() {
   });
 
 
-}
+};
 
 
 document.getElementById("resturants").addEventListener('click', showresturants);
@@ -409,10 +409,10 @@ this.markerevent = function(clicked) {
     }
 
   });
-}
+};
 
 
-}
+};
 
 
 function errorHandlingMap() {
@@ -420,4 +420,4 @@ function errorHandlingMap() {
 }
 var startapp =function(){
 ko.applyBindings(new ViewModel());
-}
+};
