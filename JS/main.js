@@ -91,9 +91,10 @@ var Locations = function(data) {
 
     error: function(result, status, err) {
       //run only the callback without attempting to parse result due to error
-      loc.close( "error with API CALL");
 
-      loc.open("--");
+      loc.close = ko.observable( "error with API CALL");
+
+      loc.open=ko.observable("--");
     },
     dataType: "json"
   });
@@ -145,24 +146,6 @@ self.returnList= ko.observableArray(self.Locationslist());
 this.currentLocation = ko.observable(this.Locationslist()[0]);
 
 
-//restaurantsLsit pushed in result list
-this.restaurantsLsit = function() {
-
-  self.returnList(self.resLsit());
-
-};
-//ALLlsit push all the list in result list
-this.ALLlsit = function() {
-
-  self.returnList(self.Locationslist());
-
-};
-//pushed the coffee list in result list
-this.coffeeLsit = function() {
-
-  self.returnList(self.cofLsit());
-
-};
 //map handling
 
 //markers
@@ -225,60 +208,10 @@ self.Locationslist().forEach(function(item) {
 
 });
 
-// to show all markers
-var showall = function() {
-  var Bound = new google.maps.LatLngBounds();
-  self.Locationslist().forEach(function(item) {
-    item.marker().setMap(map);
-    Bound.extend(item.marker().position);
-
-  });
-  map.fitBounds(Bound);
-
-};
-
-//showresturants markers
-var showresturants = function() {
-  var Bound = new google.maps.LatLngBounds();
-
-  self.Locationslist().forEach(function(item) {
-    if (item.type() == "Cafe") {
-
-      item.marker().setMap(null);
-
-    } else {
-      item.marker().setMap(map);
-
-    }
-    Bound.extend(item.marker().position);
-  });
 
 
-};
-
-//showcoffee markers
-var showcoffee = function() {
-  var Bound = new google.maps.LatLngBounds();
-
-  self.Locationslist().forEach(function(item) {
-    if (item.type() == "restaurant") {
-
-      item.marker().setMap(null);
-
-    } else {
-      item.marker().setMap(map);
-
-    }
-    Bound.extend(item.marker().position);
-  });
 
 
-};
-
-
-document.getElementById("resturants").addEventListener('click', showresturants);
-document.getElementById("coffees").addEventListener('click', showcoffee);
-document.getElementById("ALL").addEventListener('click', showall);
 
 
 
@@ -297,14 +230,78 @@ this.markerevent = function(clicked) {
 };
 
 
+
+
+
+
+
+
+//restaurantsLsit pushed in result list and showresturants markers
+
+this.restaurantsLsit = function() {
+
+  self.returnList(self.resLsit());
+  var Bound = new google.maps.LatLngBounds();
+
+  self.Locationslist().forEach(function(item) {
+    if (item.type() == "Cafe") {
+
+      item.marker().setMap(null);
+
+    } else {
+      item.marker().setMap(map);
+
+    }
+    Bound.extend(item.marker().position);
+  });
+
 };
-//ajax call before running any thing
+//ALLlsit push all the list in result list and  to show all markers
+
+this.ALLlsit = function() {
+
+  self.returnList(self.Locationslist());
+
+  var Bound = new google.maps.LatLngBounds();
+  self.Locationslist().forEach(function(item) {
+    item.marker().setMap(map);
+    Bound.extend(item.marker().position);
+
+  });
+  map.fitBounds(Bound);
+
+};
+//pushed the coffee list in result list and show coffee markers
+
+this.coffeeLsit = function() {
+
+  self.returnList(self.cofLsit());
+
+  var Bound = new google.maps.LatLngBounds();
+
+  self.Locationslist().forEach(function(item) {
+    if (item.type() == "restaurant") {
+
+      item.marker().setMap(null);
+
+    } else {
+      item.marker().setMap(map);
+
+    }
+    Bound.extend(item.marker().position);
+  });
+};
+
+
+
+};
 
 
 
 function errorHandlingMap() {
     $('#map').html('Error with google API');
-}
+};
+
 var startapp =function(){
 ko.applyBindings(new ViewModel());
 };
