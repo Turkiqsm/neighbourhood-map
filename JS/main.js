@@ -77,7 +77,7 @@ var Locations = function(data) {
 
     success: function(result, status) {
       var open =result.response.hours.timeframes[0].open[0].end;
-      var close=result.response.hours.timeframes[0].open[0].start
+      var close=result.response.hours.timeframes[0].open[0].start;
 
       loc.close = ko.observable(open);
       loc.open =ko.observable(close);
@@ -300,7 +300,7 @@ this.coffeeLsit = function() {
 
 function errorHandlingMap() {
     $('#map').html('Error with google API');
-};
+}
 
 var startapp =function(){
 ko.applyBindings(new ViewModel());
