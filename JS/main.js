@@ -63,25 +63,24 @@ var Locations = function(data) {
 
   loc.lat = ko.observable(data.lat);
   loc.lang = ko.observable(data.lang);
-
   loc.name = ko.observable(data.name);
-  loc.latlang = ko.observable(data.latlang);
   loc.type = ko.observable(data.type);
-  loc.open = ko.observable(data.open);
-  loc.close = ko.observable(data.close);
+
+
 
 
   $.ajax({
     type: "GET",
-    url: 'https://api.foursquare.com/v2/venues/43695300f964a5208c291fe3/hours?ll=' + loc.lat()+','+loc.lang() + '&client_id=Q10RHT2AAAAYARCOTUXBASIBODFSB0A1Y0SRZMALVHKDHCWP&client_secret=MJIERSD5GLP34P33KROA1YWYXJMWQ00B0NHEUZVSG0KRDCIZ&v=20180213',
-
+    url: 'https://api.foursquare.com/v2/venues/43695300f964a5208c291fe3/hours?ll=' + data.lat+','+data.lang + '&client_id=Q10RHT2AAAAYARCOTUXBASIBODFSB0A1Y0SRZMALVHKDHCWP&client_secret=MJIERSD5GLP34P33KROA1YWYXJMWQ00B0NHEUZVSG0KRDCIZ&v=20180213',
+    async:false,
     data: 'JSON',
 
     success: function(result, status) {
+      var open =result.response.hours.timeframes[0].open[0].end;
+      var close=result.response.hours.timeframes[0].open[0].start
 
-      loc.close (result.response.hours.timeframes[0].open[0].end);
-
-      loc.open(result.response.hours.timeframes[0].open[0].start);
+      loc.close = ko.observable(open);
+      loc.open =ko.observable(close);
 
 
 
@@ -100,126 +99,11 @@ var Locations = function(data) {
   });
 
 
+  console.log(loc.open());
+
+
 };//end of locations function
 
-
-/*
-var map;
-
-
-  function initMap() {
-    var latlang =  new google.maps.LatLng(24.797043,46.655338);
-
-    map = new google.maps.Map(document.getElementById('map'), {
-    center: latlang,
-    zoom: 17
-
-  });
-//markers
-    inLocations.forEach(function(item){
-      item.pp = new google.maps.LatLng(item.lat,item.lang);
-      item.marker = new google.maps.Marker({
-          position: item.pp,
-          map: map,
-          animation: google.maps.Animation.DROP
-        });
-        item.marker.addListener('click', function(){
-
-          markerA(item);
-
-        });
-
-
-
-    });
-
-
-
-
-
-
-
-
-//window
-
-  inLocations.forEach(function(item){
-
-
-        item.infowindow = new google.maps.InfoWindow({
-        maxHight:400 ,
-        pixelOffse : 400,
-        content :'<div id="content">'+'<p>...<p>'+
-            '<div id="siteNotice">'+
-            '</div>'+
-            '<h1 id="firstHeading" class="firstHeading">'+item.name+'</h1>'+
-            '<div id="bodyContent">'+"<h6>"+item.type+"</h6>"+
-            '<div id="col-md-4">'+"<div>opens at</div>"+"<div>"+item.open+"</div>"+
-            '<div id="col-md-4">'+"<div>closes at</div>"+"<div>"+item.close+"</div>"
-
-
-      });
-
-
-    });
-
-// to show all markers
-var showall =  function(){
-var Bound = new google.maps.LatLngBounds();
-inLocations.forEach(function(item){
-item.marker.setMap(map);
-Bound.extend(item.marker.position);
-
-});
-map.fitBounds(Bound);
-
-}
-
-//showresturants
-var showresturants =  function(){
-  var Bound = new google.maps.LatLngBounds();
-
-inLocations.forEach(function(item){
-if(item.type=="Cafe"){
-
-  item.marker.setMap(null);
-
-}else {
-  item.marker.setMap(map);
-
-}
-Bound.extend(item.marker.position);
-});
-
-
-}
-
-//showcoffee
-var showcoffee =  function(){
-  var Bound = new google.maps.LatLngBounds();
-
-inLocations.forEach(function(item){
-if(item.type=="restaurant"){
-
-  item.marker.setMap(null);
-
-}else {
-  item.marker.setMap(map);
-
-}
-Bound.extend(item.marker.position);
-});
-
-
-}
-
-
-document.getElementById("resturants").addEventListener('click',showresturants);
-document.getElementById("coffees").addEventListener('click',showcoffee);
-document.getElementById("ALL").addEventListener('click',showall);
-
-
-}
-*/
 
 
 
@@ -323,6 +207,7 @@ self.markerAnimation = function(item){
 
 self.Locationslist().forEach(function(item) {
 
+  console.log(item.open());
   item.infowindow = ko.observable (new google.maps.InfoWindow({
     maxHight: 400,
     pixelOffse: 400,
@@ -413,6 +298,8 @@ this.markerevent = function(clicked) {
 
 
 };
+//ajax call before running any thing
+
 
 
 function errorHandlingMap() {
