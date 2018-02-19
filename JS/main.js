@@ -196,7 +196,7 @@ self.markerAnimation = function(item){
             item.close = ko.observable( "error with API CALL");
 
             item.open=ko.observable("--");
-    })//end of fail
+    });//end of fail
 
 
 
