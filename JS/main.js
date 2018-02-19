@@ -66,43 +66,6 @@ var Locations = function(data) {
   loc.name = ko.observable(data.name);
   loc.type = ko.observable(data.type);
 
-
-
-
-  $.ajax({
-    type: "GET",
-    url: 'https://api.foursquare.com/v2/venues/43695300f964a5208c291fe3/hours?ll=' + data.lat+','+data.lang + '&client_id=Q10RHT2AAAAYARCOTUXBASIBODFSB0A1Y0SRZMALVHKDHCWP&client_secret=MJIERSD5GLP34P33KROA1YWYXJMWQ00B0NHEUZVSG0KRDCIZ&v=20180213',
-    async:false,
-    data: 'JSON',
-
-    success: function(result, status) {
-      var open =result.response.hours.timeframes[0].open[0].end;
-      var close=result.response.hours.timeframes[0].open[0].start;
-
-      loc.close = ko.observable(open);
-      loc.open =ko.observable(close);
-
-
-
-
-
-
-    },
-
-    error: function(result, status, err) {
-      //run only the callback without attempting to parse result due to error
-
-      loc.close = ko.observable( "error with API CALL");
-
-      loc.open=ko.observable("--");
-    },
-    dataType: "json"
-  });
-
-
-  console.log(loc.open());
-
-
 };//end of locations function
 
 
@@ -166,18 +129,86 @@ self.Locationslist().forEach(function(item) {
 
 });
 
-
+//to set the animation and send creat the InfoWindow
 self.markerAnimation = function(item){
 
 
+//ajax call first
+  $.ajax({
+
+      // The URL for the request
+      url: "https://api.foursquare.com/v2/venues/43695300f964a5208c291fe3/hours?ll=" + item.lat()+","+item.lang() + "&client_id=Q10RHT2AAAAYARCOTUXBASIBODFSB0A1Y0SRZMALVHKDHCWP&client_secret=MJIERSD5GLP34P33KROA1YWYXJMWQ00B0NHEUZVSG0KRDCIZ&v=20180213",
+
+
+      // Whether this is a POST or GET request
+      type: "GET",
+
+      // The type of data we expect back
+      dataType : "json",
+  })
+    // Code to run if the request succeeds (is done);
+    // The response is passed to the function
+    .done(function( json ) {
+      var open =json.response.hours.timeframes[0].open[0].start;
+      var close=json.response.hours.timeframes[0].open[0].end;
+
+      item.close = ko.observable(close);
+      item.open =ko.observable(open);
 
 
 
-  item.marker().setAnimation(google.maps.Animation.BOUNCE);
+      //then creat the window
+          item.infowindow = ko.observable (new google.maps.InfoWindow({
+            maxHight: 400,
+            pixelOffse: 400,
+            content: '<div id="content">' + '<p>...<p>' +
+              '<div id="siteNotice">' +
+              '</div>' +
+              '<h1 id="firstHeading" class="firstHeading">' + item.name() + '</h1>' +
+              '<div id="bodyContent">' + "<h6>" + item.type() + "</h6>" +
+              '<div id="col-md-4">' + "<div>opens at</div>" + "<div>" + item.open() + "</div>" +
+              '<div id="col-md-4">' + "<div>closes at</div>" + "<div>" + item.close() + "</div>"
 
-  item.infowindow().open(map,item.marker());
 
-  setTimeout(function(){ item.marker().setAnimation(null); }, 1550);
+          }));
+
+
+
+
+
+
+        item.marker().setAnimation(google.maps.Animation.BOUNCE);
+
+        item.infowindow().open(map,item.marker());
+
+        setTimeout(function(){ item.marker().setAnimation(null); }, 1550);
+
+
+
+
+
+    })//end of done
+
+    // Code to run if the request fails; the raw request and
+    // status codes are passed to the function
+    .fail(function( xhr, status, errorThrown ) {
+
+            item.close = ko.observable( "error with API CALL");
+
+            item.open=ko.observable("--");
+    })//end of fail
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 };
@@ -188,25 +219,7 @@ self.markerAnimation = function(item){
 
 //window
 
-self.Locationslist().forEach(function(item) {
 
-  console.log(item.open());
-  item.infowindow = ko.observable (new google.maps.InfoWindow({
-    maxHight: 400,
-    pixelOffse: 400,
-    content: '<div id="content">' + '<p>...<p>' +
-      '<div id="siteNotice">' +
-      '</div>' +
-      '<h1 id="firstHeading" class="firstHeading">' + item.name() + '</h1>' +
-      '<div id="bodyContent">' + "<h6>" + item.type() + "</h6>" +
-      '<div id="col-md-4">' + "<div>opens at</div>" + "<div>" + item.open() + "</div>" +
-      '<div id="col-md-4">' + "<div>closes at</div>" + "<div>" + item.close() + "</div>"
-
-
-  }));
-
-
-});
 
 
 
